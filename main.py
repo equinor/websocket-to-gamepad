@@ -20,14 +20,23 @@ ws = ControllerSocket()
 ws.connect()
 
 while True:
-    gamepad_buttons.update_joystick_values(joystick_values=ws.js_values)
-    gamepad_buttons.update_button_values(button_val=ws.switch_02)
+    if ws.battery_level <= 10:
+        print(f"Low battery: {ws.battery_level}%")
 
-    if gamepad_buttons.BUTTON_CHANGED:
-        if ws.switch_02:
+    gamepad_buttons.update_joystick_values(joystick_values=ws.js_values)
+    gamepad_buttons.update_button_values(button_values=ws.button_values)
+
+    if gamepad_buttons.BUTTON_CHANGED == 1:
+        if ws.button_values[0]:
             gamepad.press_button(0x1000)
         else:
             gamepad.release_button(0x1000)
+        gamepad_buttons.BUTTON_CHANGED = 0
+    elif gamepad_buttons.BUTTON_CHANGED == 2:
+        if ws.button_values[1]:
+            gamepad.press_button(0x2000)
+        else:
+            gamepad.release_button(0x2000)
         gamepad_buttons.BUTTON_CHANGED = 0
 
     gamepad.left_joystick(x_value=gamepad_buttons.LJS_X, y_value=gamepad_buttons.LJS_Y)  # values between -32768 and 32767

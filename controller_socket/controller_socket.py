@@ -14,7 +14,8 @@ class ControllerSocket():
         self.thread = Thread(target = self.ws.run_forever)
         self.thread.daemon = True
         self.js_values  = [0,0,0,0]
-        self.switch_02 = 0
+        self.button_values = [0,0]
+        self.battery_level = 100
 
     def __on_message(self,ws, message):
         message = json.loads(message)
@@ -23,8 +24,11 @@ class ControllerSocket():
         js03 = message["payload"]["joystick_03"]
         js04 = message["payload"]["joystick_04"]
         switch_02 = message["payload"]["switch_02"]
+        switch_03 = message["payload"]["switch_03"]
+        battery_level = message["payload"]["win_ru_battery"]
         self.js_values =  [js01, js02, js03, js04]
-        self.switch_02 = switch_02
+        self.button_values = [switch_02, switch_03]
+        self.battery_level = battery_level
 
     def __on_error(self,ws, error):
         print(error)
