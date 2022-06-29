@@ -4,7 +4,7 @@ from pydantic import BaseSettings, Field
 class Settings(BaseSettings):
     # Websocket server
     WS_SERVER_HOST: str = Field(default="localhost")
-    WS_SERVER_PORT: int = Field(default=5269)
+    WS_SERVER_PORT: int = Field(default=8000)
 
     # Joystick limit values
     JS_INPUT_MIN: int = Field(default=-1000)
