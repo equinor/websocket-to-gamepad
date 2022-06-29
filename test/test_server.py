@@ -6,13 +6,14 @@ from websocket import create_connection
 from websocket_server import WebsocketServer
 from xgamepad import XGamePad
 
+from config.settings import settings
 from gamepad.emulated_gamepad import GamepadEmulator
 
 
 class TestServer():
     def __init__(self):
-        self.host = 'localhost'
-        self.port = 6259
+        self.host = settings.WS_SERVER_HOST
+        self.port = settings.WS_SERVER_PORT
 
         self.server = WebsocketServer(host=self.host, port=self.port, loglevel=logging.DEBUG)
         self.server.set_fn_new_client(self.new_client)

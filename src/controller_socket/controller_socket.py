@@ -5,9 +5,9 @@ import websocket
 
 
 class ControllerSocket():
-    def __init__(self) -> None:
+    def __init__(self, host, port) -> None:
         #websocket.enableTrace(True)
-        self.ws = websocket.WebSocketApp("ws://localhost:6259",
+        self.ws = websocket.WebSocketApp(f"ws://{host}:{port}",
                               on_open=self._on_open,
                               on_error=self._on_error,
                               on_message=self._on_message)
