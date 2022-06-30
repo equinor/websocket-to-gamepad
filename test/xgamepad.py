@@ -1,22 +1,21 @@
-
 from threading import Thread
 
 from inputs import get_gamepad
 
 
 class XGamePad(Thread):
-    def __init__(self):			
-        Thread.__init__(self, daemon=True)		# thread init class (don't forget this)
-        self.A = 0			# all vars of gamepad, set init val to 0
+    def __init__(self):
+        Thread.__init__(self, daemon=True)  # thread init class (don't forget this)
+        self.A = 0  # all vars of gamepad, set init val to 0
         self.B = 0
         self.X = 0
         self.Y = 0
-        self.LBumper = 0	
+        self.LBumper = 0
         self.RBumper = 0
-        self.LThumb = 0	
+        self.LThumb = 0
         self.RThumb = 0
-        self.LTrigger = 0	
-        self.RTrigger = 0	
+        self.LTrigger = 0
+        self.RTrigger = 0
         self.Back = 0
         self.Start = 0
         self.LStickX = 0
@@ -27,10 +26,12 @@ class XGamePad(Thread):
         self.DPadY = 0
         self.message = ""
 
-    def run(self):		# run is a default Thread function
-        while True:	# loop for ever
-            for event in get_gamepad():	# check events of gamepads, if not event, all is stop
-                if event.ev_type == "Key":	# category of binary respond values
+    def run(self):  # run is a default Thread function
+        while True:  # loop for ever
+            for (
+                event
+            ) in get_gamepad():  # check events of gamepads, if not event, all is stop
+                if event.ev_type == "Key":  # category of binary respond values
                     if event.code == "BTN_SOUTH":
                         self.A = event.state
                     elif event.code == "BTN_EAST":
@@ -51,18 +52,20 @@ class XGamePad(Thread):
                         self.Back = event.state
                     elif event.code == "BTN_SELECT":
                         self.Start = event.state
-                
-                elif event.ev_type == "Absolute":	# category of analog values
-                                    # some values are from -32000 to 32000, or -256 to 256
-                                    # here all values are mapped from -512 to 512 by bitshifting
+
+                elif event.ev_type == "Absolute":  # category of analog values
+                    # some values are from -32000 to 32000, or -256 to 256
+                    # here all values are mapped from -512 to 512 by bitshifting
                     if event.code[-1:] == "Z":
-                        event.state = event.state<<1	# reduce range from 256 to 512
+                        event.state = event.state << 1  # reduce range from 256 to 512
                     else:
-                        event.state = event.state>>6	# reduce range from 32000 to 512
-                    
-                    if event.state < 40 and event.state > -40:  # dead zone of my joypad, check this one for yours
+                        event.state = event.state >> 6  # reduce range from 32000 to 512
+
+                    if (
+                        event.state < 40 and event.state > -40
+                    ):  # dead zone of my joypad, check this one for yours
                         event.state = 0
-                    
+
                     if event.code == "ABS_Z":
                         self.LTrigger = event.state
                     elif event.code == "ABS_RZ":
@@ -83,7 +86,5 @@ class XGamePad(Thread):
 
     def encode_message(self):
         message = f'{{"payload": {{"joystick_01": {-self.LStickX}, "joystick_02": {-self.LStickY}, "joystick_03": {self.RStickX}, "joystick_04": {self.RStickY}, "switch_02": {self.A}, "switch_03": {self.B}, "win_ru_battery": 90}} }}'
-        #print(message)
+        # print(message)
         self.message = message
-
-
